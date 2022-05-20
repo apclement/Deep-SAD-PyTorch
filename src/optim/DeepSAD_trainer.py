@@ -2,7 +2,7 @@ from base.base_trainer import BaseTrainer
 from base.base_dataset import BaseADDataset
 from base.base_net import BaseNet
 from torch.utils.data.dataloader import DataLoader
-from sklearn.metrics import roc_auc_score, precision_recall_curve, auc
+from sklearn.metrics import roc_auc_score, precision_recall_curve, auc, average_precision_score
 
 import logging
 import time
@@ -29,7 +29,10 @@ class DeepSADTrainer(BaseTrainer):
         # Results
         self.train_time = None
         self.test_auc = None
-        self.test_prauc = None
+        self.test_avg_prec = None
+        self.test_precision = None
+        self.test_recall = None
+        self.test_thresholds = None
         self.test_time = None
         self.test_scores = None
 
@@ -143,8 +146,8 @@ class DeepSADTrainer(BaseTrainer):
         labels = np.array(labels)
         scores = np.array(scores)
         self.test_auc = roc_auc_score(labels, scores)
-        precision, recall, thresholds = precision_recall_curve(labels, scores)
-        self.test_prauc = auc(precision, recall)
+        self.test_precision, self.test_recall, self.test_thresholds = precision_recall_curve(labels, scores)
+        self.test_avg_prec = average_precision_score(labels, scores)
 
         # Log results
         logger.info('Test Loss: {:.6f}'.format(epoch_loss / n_batches))
