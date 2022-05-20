@@ -143,7 +143,7 @@ class DeepSADTrainer(BaseTrainer):
         labels = np.array(labels)
         scores = np.array(scores)
         self.test_auc = roc_auc_score(labels, scores)
-         self.test_prauc = pr_auc_score(labels, scores)
+        self.test_prauc = pr_auc_score(labels, scores)
 
         # Log results
         logger.info('Test Loss: {:.6f}'.format(epoch_loss / n_batches))
