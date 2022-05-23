@@ -35,6 +35,7 @@ class DeepSADTrainer(BaseTrainer):
         self.test_thresholds = None
         self.test_time = None
         self.test_scores = None
+        self.test_outputs = None
 
     def train(self, dataset: BaseADDataset, net: BaseNet):
         logger = logging.getLogger()
@@ -114,6 +115,7 @@ class DeepSADTrainer(BaseTrainer):
         n_batches = 0
         start_time = time.time()
         idx_label_score = []
+        test_outputs = []
         net.eval()
         with torch.no_grad():
             for data in test_loader:
@@ -124,7 +126,7 @@ class DeepSADTrainer(BaseTrainer):
                 semi_targets = semi_targets.to(self.device)
                 idx = idx.to(self.device)
 
-                outputs = net(inputs)
+                outputs = net(inputs)                
                 dist = torch.sum((outputs - self.c) ** 2, dim=1)
                 losses = torch.where(semi_targets == 0, dist, self.eta * ((dist + self.eps) ** semi_targets.float()))
                 loss = torch.mean(losses)
@@ -134,12 +136,14 @@ class DeepSADTrainer(BaseTrainer):
                 idx_label_score += list(zip(idx.cpu().data.numpy().tolist(),
                                             labels.cpu().data.numpy().tolist(),
                                             scores.cpu().data.numpy().tolist()))
+                test_outputs += [outputs.cpu().data.numpy()]
 
                 epoch_loss += loss.item()
                 n_batches += 1
 
         self.test_time = time.time() - start_time
         self.test_scores = idx_label_score
+        self.test_outputs = test_outputs
 
         # Compute AUC
         _, labels, scores = zip(*idx_label_score)
