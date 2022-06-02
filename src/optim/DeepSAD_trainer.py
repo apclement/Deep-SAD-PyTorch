@@ -128,7 +128,8 @@ class DeepSADTrainer(BaseTrainer):
 
                 outputs = net(inputs)                
                 dist = torch.sum((outputs - self.c) ** 2, dim=1)
-                losses = torch.where(semi_targets == 0, dist, self.eta * ((dist + self.eps) ** semi_targets.float()))
+                eta = torch.where(semi_targets == -1, 10, 1)
+                losses = torch.where(semi_targets == 0, dist, eta * ((dist + self.eps) ** semi_targets.float()))
                 loss = torch.mean(losses)
                 scores = dist
 
