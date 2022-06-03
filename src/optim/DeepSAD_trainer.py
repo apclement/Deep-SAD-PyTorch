@@ -81,7 +81,8 @@ class DeepSADTrainer(BaseTrainer):
                 # Update network parameters via backpropagation: forward + backward + optimize
                 outputs = net(inputs)
                 dist = torch.sum((outputs - self.c) ** 2, dim=1)
-                eta = torch.where(semi_targets == -1, 1024, 1)
+                eta = torch.where(semi_targets == -1, 4096, 1)
+                print(">>>>>>>> Weight of -1 class = 4096")
                 losses = torch.where(semi_targets == 0, dist, eta * ((dist + self.eps) ** semi_targets.float()))
                 loss = torch.mean(losses)
                 loss.backward()
