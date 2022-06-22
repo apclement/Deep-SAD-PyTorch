@@ -56,7 +56,7 @@ class AETrainer(BaseTrainer):
             n_batches = 0
             epoch_start_time = time.time()
             for data in train_loader:
-                inputs, _, _, _ = data
+                inputs, _, _, _, _ = data
                 inputs = inputs.to(self.device)
 
                 # Zero the network parameter gradients
@@ -105,7 +105,7 @@ class AETrainer(BaseTrainer):
         ae_net.eval()
         with torch.no_grad():
             for data in test_loader:
-                inputs, labels, _, idx = data
+                inputs, labels, _, _, idx = data
                 inputs, labels, idx = inputs.to(self.device), labels.to(self.device), idx.to(self.device)
 
                 rec = ae_net(inputs)
