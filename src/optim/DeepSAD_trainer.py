@@ -72,8 +72,8 @@ class DeepSADTrainer(BaseTrainer):
             n_batches = 0
             epoch_start_time = time.time()
             for data in train_loader:
-                inputs, _, semi_targets, _ = data
-                inputs, semi_targets = inputs.to(self.device), semi_targets.to(self.device)
+                inputs, _, semi_targets, w, _ = data
+                inputs, semi_targets, w = inputs.to(self.device), semi_targets.to(self.device), w.to(self.device)
 
                 # Zero the network parameter gradients
                 optimizer.zero_grad()
@@ -81,8 +81,9 @@ class DeepSADTrainer(BaseTrainer):
                 # Update network parameters via backpropagation: forward + backward + optimize
                 outputs = net(inputs)
                 dist = torch.sum((outputs - self.c) ** 2, dim=1)
-               # eta = torch.where(semi_targets == -1, 300, 1)               
-                losses = torch.where(semi_targets == 0, dist, self.eta * ((dist + self.eps) ** semi_targets.float()))
+                # eta = torch.where(semi_targets == -1, 300, 1) 
+                w = torch.where(semi_targets == -1, w, 1) 
+                losses = torch.where(semi_targets == 0, dist, w * self.eta * ((dist + self.eps) ** semi_targets.float()))
                 loss = torch.mean(losses)
                 loss.backward()
                 optimizer.step()
@@ -120,7 +121,7 @@ class DeepSADTrainer(BaseTrainer):
         net.eval()
         with torch.no_grad():
             for data in test_loader:
-                inputs, labels, semi_targets, idx = data
+                inputs, labels, semi_targets, _, idx = data
 
                 inputs = inputs.to(self.device)
                 labels = labels.to(self.device)
@@ -169,7 +170,7 @@ class DeepSADTrainer(BaseTrainer):
         with torch.no_grad():
             for data in train_loader:
                 # get the inputs of the batch
-                inputs, _, _, _ = data
+                inputs, _, _, _, _ = data
                 inputs = inputs.to(self.device)
                 outputs = net(inputs)
                 n_samples += outputs.shape[0]
