@@ -47,6 +47,7 @@ class AETrainer(BaseTrainer):
         start_time = time.time()
         ae_net.train()
         for epoch in range(self.n_epochs):
+            dataset.set_epoch(epoch)
 
             scheduler.step()
             if epoch in self.lr_milestones:
