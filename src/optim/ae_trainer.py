@@ -107,14 +107,14 @@ class AETrainer(BaseTrainer):
         with torch.no_grad():
             for data in test_loader:
                 inputs, labels, _, _, idx = data
-                inputs, labels, idx = inputs.to(self.device), labels.to(self.device), idx.to(self.device)
+                inputs, labels, idx = inputs.to(self.device), labels.to(self.device), idx#.to(self.device)
 
                 rec = ae_net(inputs)
                 rec_loss = criterion(rec, inputs)
                 scores = torch.mean(rec_loss, dim=tuple(range(1, rec.dim())))
 
                 # Save triple of (idx, label, score) in a list
-                idx_label_score += list(zip(idx.cpu().data.numpy().tolist(),
+                idx_label_score += list(zip(idx, #.cpu().data.numpy().tolist(),
                                             labels.cpu().data.numpy().tolist(),
                                             scores.cpu().data.numpy().tolist()))
 
