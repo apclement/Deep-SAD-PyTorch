@@ -128,7 +128,11 @@ class AETrainer(BaseTrainer):
         _, labels, scores = zip(*idx_label_score)
         labels = np.array(labels)
         scores = np.array(scores)
-        self.test_auc = roc_auc_score(labels, scores)
+        if any(labels):
+            self.test_auc = roc_auc_score(labels, scores)
+        else:
+            print("WARN no positive label, unable to compute test AUC!")
+            self.test_auc = 0.0            
 
         # Log results
         logger.info('Test Loss: {:.6f}'.format(epoch_loss / n_batches))
