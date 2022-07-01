@@ -48,7 +48,7 @@ class AETrainer(BaseTrainer):
         ae_net.train()
         for epoch in range(self.n_epochs):
             dataset.set_epoch(epoch)
-            print(epoch)
+            print(f"Starting epoch {epoch}...")
 
             scheduler.step()
             if epoch in self.lr_milestones:
@@ -57,8 +57,7 @@ class AETrainer(BaseTrainer):
             epoch_loss = 0.0
             n_batches = 0
             epoch_start_time = time.time()
-            for data in train_loader:
-                print(f"epoch batch starting...")
+            for data in train_loader:               
                 inputs, _, _, _, _ = data
                 inputs = inputs.to(self.device)
 
