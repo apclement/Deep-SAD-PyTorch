@@ -9,7 +9,15 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
+import torch.distributed as dist
 
+def _average_gradients(model):
+        print("Gradient averaging.")
+        # Gradient averaging.
+        size = float(dist.get_world_size())
+        for param in model.parameters():
+            dist.all_reduce(param.grad.data, op=dist.reduce_op.SUM)
+            param.grad.data /= size
 
 class AETrainer(BaseTrainer):
 
@@ -69,6 +77,7 @@ class AETrainer(BaseTrainer):
                 rec_loss = criterion(rec, inputs)
                 loss = torch.mean(rec_loss)
                 loss.backward()
+                 _average_gradients(ae_net)
                 optimizer.step()
 
                 epoch_loss += loss.item()
