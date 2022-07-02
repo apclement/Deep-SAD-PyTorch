@@ -12,7 +12,6 @@ import numpy as np
 import torch.distributed as dist
 
 def _average_gradients(model):
-        print("Gradient averaging.")
         # Gradient averaging.
         size = float(dist.get_world_size())
         for param in model.parameters():
