@@ -116,9 +116,9 @@ class AETrainer(BaseTrainer):
                 scores = torch.mean(rec_loss, dim=tuple(range(1, rec.dim())))
 
                 # Save triple of (idx, label, score) in a list
-                idx_label_score += list(zip(idx, #.cpu().data.numpy().tolist(),
-                                            labels.cpu().data.numpy().tolist(),
-                                            scores.cpu().data.numpy().tolist()))
+                #idx_label_score += list(zip(idx, #.cpu().data.numpy().tolist(),
+                 #                           labels.cpu().data.numpy().tolist(),
+                 #                          scores.cpu().data.numpy().tolist()))
 
                 loss = torch.mean(rec_loss)
                 epoch_loss += loss.item()
