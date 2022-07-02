@@ -76,7 +76,7 @@ class AETrainer(BaseTrainer):
                 rec_loss = criterion(rec, inputs)
                 loss = torch.mean(rec_loss)
                 loss.backward()
-                #_average_gradients(ae_net)
+                _average_gradients(ae_net)
                 optimizer.step()
 
                 epoch_loss += loss.item()
