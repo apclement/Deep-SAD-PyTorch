@@ -28,11 +28,6 @@ import time
 
 from params import *
 
-os.environ['AWS_REGION'] = 'eu-west-3'
-os.environ["AWS_ACCESS_KEY_ID"] = "AKIAXZV2S5AJXG27RMGP"
-os.environ["AWS_SECRET_ACCESS_KEY"] = "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"
-os.environ['AWS_DEFAULT_REGION'] = 'eu-west-3'
-
 class S3_CSV(IterableDataset):
     def __init__(self, urls, shuffle_urls=False, transform=None):
         self.rank = int(os.getenv("RANK", "1"))
