@@ -4,7 +4,8 @@ import torch
 import io
 import pandas as pd
 from networks.mlp import MLP
-from params import *
+from ext.params import *
+import json
 
 def model_fn(model_dir):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -17,50 +18,31 @@ def model_fn(model_dir):
 
 def input_fn(request_body, content_type):
     print(f"Content-type : {content_type}")
-    print(request_body)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    try:
-        df = pd.read_csv(io.StringIO(request_body))
-    except:
-        return None    
-  
-    #one line case
-    df = pd.read_csv(io.StringIO(request_body), header=None) if df.shape[0] == 0 else df
     
-    # start at 4 index to skip project_hash, ecriture_id, label and target columns and get the feature columns     
-    try:
-        samples = torch.tensor(df.iloc[:, 4:].to_numpy(), dtype=torch.float32, device=device)   
-    except Exception as e:
-        print(">>>>>>>>>>>>>>>")
-        print(request_body)
-        print("############")
-        df.info()
-        #pd.set_option('display.max_rows', 300)
-        pd.set_option('display.max_columns', 300)
-        df_slice = df.iloc[:, 4:]
-        print(df_slice.shape)
-        print(df_slice)
-        print("<<<<<<<<<<<<<<<<<")
-        raise e
-        
-    # extract ids
-    ids = df.iloc[:, :2]
-    return ids, samples    
+    body_json = request_body.decode()
+    payload = json.loads(body_json)
+    values = [line['features'] for elem in payload for line in elem]  
+    
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+      
+    samples = torch.tensor(values, dtype=torch.float32, device=device)   
+           
+    return samples      
 
 # Perform prediction on the deserialized object, with the loaded model
 def predict_fn(inputs, c_model):
     if inputs is None:
         return None
-    ids, samples = inputs
+    samples = inputs
     c, model = c_model
     model.eval()
     with torch.no_grad():
         outputs = model(samples)
         scores = torch.sum((outputs - c) ** 2, dim=1)
         
-    ids['score'] = scores.cpu().numpy()
+    scores = pd.DataFrame({'score': scores.cpu().numpy()})
     
-    return ids
+    return scores
 
 # Serialize the prediction result into the desired response content type
 def output_fn(predictions, response_content_type):

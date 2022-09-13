@@ -26,7 +26,7 @@ import _pywrap_s3_io
 import timeit
 import time
 
-from params import *
+from ext.params import *
 
 class S3_CSV(IterableDataset):
     def __init__(self, urls, shuffle_urls=False, transform=None):

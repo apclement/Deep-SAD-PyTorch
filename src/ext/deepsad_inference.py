@@ -4,7 +4,7 @@ import torch
 import io
 import pandas as pd
 from networks.mlp import MLP
-from params import *
+from ext.params import *
 import json
 
 def model_fn(model_dir):
@@ -20,14 +20,9 @@ def input_fn(request_body, content_type):
     print(f"Content-type : {content_type}")
     
     body_json = request_body.decode()
-    #print(f">>>>>>>>>{body_json}<<<<<<")
     payload = json.loads(body_json)
-    print(f">>>>!!!>>>>{len(payload)}<<<")
     values = [line['features'] for elem in payload for line in elem]  
-    #df = pd.DataFrame(values)
-    #print(df.info())
-    #print(df)
- 
+    
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
       
     samples = torch.tensor(values, dtype=torch.float32, device=device)   
