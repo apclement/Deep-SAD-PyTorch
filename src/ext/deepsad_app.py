@@ -83,10 +83,10 @@ def main():
     ae_weight_decay=1e-6
     
     optimizer_name='adam'
-    lr=0.001
-    n_epochs=120
+    lr=0.01
+    n_epochs=50
     #lr_milestone=[20, 80, 120]
-    lr_milestone=[80]
+    lr_milestone=[20]
     batch_size=128
     weight_decay=1e-6
     
@@ -182,7 +182,7 @@ def main():
     projects, indices, labels, scores = zip(*deepSAD.results['test_scores'])
     
     result_df = pd.DataFrame({'projects': projects, 'indices': indices, 'labels': labels, 'scores': scores})
-    result_df.to_csv(f"s3://ml4ra/_vat_training/sagemaker/test_score_labels_{host_rank}.csv", index=False)
+    result_df.to_csv(f"s3://ml4ra/_vat_training/sagemaker/vat/test_score_labels_{host_rank}.csv", index=False)
     
     def export_metrics(trainer, name):
         # save losses
@@ -195,7 +195,7 @@ def main():
         else:
             metrics = pd.concat([train_losses, test_losses])
 
-        metrics.to_csv(f"s3://ml4ra/_vat_training/sagemaker/{name}_metrics_{host_rank}.csv", index=False)
+        metrics.to_csv(f"s3://ml4ra/_vat_training/sagemaker/vat/{name}_metrics_{host_rank}.csv", index=False)
         
     export_metrics(deepSAD.ae_trainer, 'ae')
     export_metrics(deepSAD.trainer, 'sad')     

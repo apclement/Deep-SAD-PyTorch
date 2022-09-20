@@ -4,7 +4,7 @@ import torch
 import io
 import pandas as pd
 from networks.mlp import MLP
-from ext.params import *
+from params import *
 import json
 
 def model_fn(model_dir):

@@ -109,14 +109,13 @@ class MyADDataset(BaseADDataset):
         self.outlier_classes = (1,)
         self.known_outlier_classes = (1,)
         
-        print(f">>>> FOLD = {FOLD}")
         print(f"train_sample_pct = {train_sample_pct}")
 
         # Get train set
-        self.train_set = S3_CSV(f's3://ml4ra/_vat_training/sagemaker/folds/{FOLD}/train_sample{train_sample_pct}.csv/', shuffle_urls=True)
+        self.train_set = S3_CSV(f's3://ml4ra/_vat_training/sagemaker/vat/train_deep_{train_sample_pct}.csv/', shuffle_urls=True)
        
         # Get test set
-        self.test_set = S3_CSV(f's3://ml4ra/_vat_training/sagemaker/folds/{FOLD}/test.csv/', shuffle_urls=False)
+        self.test_set = S3_CSV(f's3://ml4ra/_vat_training/sagemaker/vat/validation_deep.csv/', shuffle_urls=False)
 
     def loaders(self, batch_size: int, shuffle_train=True, shuffle_test=False, num_workers: int = 1) -> (DataLoader, DataLoader):
         train_loader = DataLoader(dataset=self.train_set, batch_size=batch_size, num_workers=num_workers, drop_last=True)
