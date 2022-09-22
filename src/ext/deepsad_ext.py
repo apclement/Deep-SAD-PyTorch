@@ -234,7 +234,7 @@ class MyAETrainer(BaseTrainer):
             logger.info(f'| Epoch: {epoch + 1:03}/{self.n_epochs:03} | Train Time: {epoch_train_time:.3f}s '
                         f'| Train Loss: {epoch_loss / n_batches:.6f} |')   
             
-            if (epoch + 1) % 10 == 0:
+            if (epoch + 1) % 5 == 0:
                 self.test(dataset, ae_net.module)
                 
             self.train_losses += [epoch_loss / n_batches]
@@ -400,7 +400,7 @@ class MyDeepSADTrainer(BaseTrainer):
             logger.info(f'| Epoch: {epoch + 1:03}/{self.n_epochs:03} | Train Time: {epoch_train_time:.3f}s '
                         f'| Train Loss: {epoch_loss / n_batches:.6f} |')          
             
-            if (epoch+1) % 10 == 0:
+            if (epoch+1) % 5 == 0:
                 self.test(dataset, net.module)
                 
             self.train_losses += [epoch_loss / n_batches]

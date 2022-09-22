@@ -78,15 +78,15 @@ def main():
     ae_optimizer_name='adam'
     ae_lr=0.1
     ae_n_epochs=60
-    ae_lr_milestone=[20, 40, 80]
+    ae_lr_milestone=[20, ]
     ae_batch_size=128
     ae_weight_decay=1e-6
     
     optimizer_name='adam'
-    lr=0.001
-    n_epochs=120
+    lr=0.01
+    n_epochs=60#10
     #lr_milestone=[20, 80, 120]
-    lr_milestone=[80]
+    lr_milestone=[20, 50]
     batch_size=128
     weight_decay=1e-6
     
