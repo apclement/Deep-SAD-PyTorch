@@ -4,13 +4,10 @@ import torch
 import io
 import pandas as pd
 from networks.mlp import MLP
-from params import *
+from ext.params import *
 import json
 
 def model_fn(model_dir):
-    print(f">>>>"+ model_dir)
-    print(os.listdir(model_dir))
-    
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     net = MLP(x_dim=N_features, h_dims=[64, 32, 16, 8, 4], rep_dim=2, bias=False).to(device)
     net = torch.nn.DataParallel(net)
