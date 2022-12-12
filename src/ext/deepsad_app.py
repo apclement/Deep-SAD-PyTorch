@@ -84,7 +84,7 @@ def main():
     
     optimizer_name='adam'
     lr=0.01
-    n_epochs=60#10
+    n_epochs=40
     #lr_milestone=[20, 80, 120]
     lr_milestone=[20, 50]
     batch_size=128
