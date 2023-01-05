@@ -80,15 +80,15 @@ def main():
     ae_n_epochs=60
     ae_lr_milestone=[20, ]
     ae_batch_size=128
-    ae_weight_decay=1e-6
+    ae_weight_decay=1e-5
     
     optimizer_name='adam'
     lr=0.01
-    n_epochs=40
+    n_epochs=55
     #lr_milestone=[20, 80, 120]
     lr_milestone=[20, 50]
     batch_size=128
-    weight_decay=1e-6
+    weight_decay=1e-1
     
     num_threads = 4
     n_jobs_dataloader = 4
